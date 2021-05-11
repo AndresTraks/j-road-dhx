@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" >
+
+<!-- XTee conf -->
+
+  <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate" />
+
+  <bean id="xRoadConsumer" class="com.nortal.jroad.client.service.consumer.StandardXRoadConsumer">
+    <property name="webServiceTemplate" ref="webServiceTemplate" />
+  </bean>
+
+  <bean id="xRoadServiceConfigurationProvider" class="com.nortal.jroad.client.service.configuration.provider.PropertiesBasedXRoadServiceConfigurationProvider" init-method="init"/>
+
+  <bean id="dhlXTeeService" class="com.nortal.jroad.client.dhl.DhlXTeeServiceImpl" init-method="init">
+    <property name="database" value="dhl"/><!-- can be unset - then read from the classname prefix -->
+    <property name="XRoadServiceConfigurationProvider" ref="xRoadServiceConfigurationProvider" />
+    <property name="XRoadConsumer" ref="xRoadConsumer" />
+    <!-- Optional properties - START -->
+    <property name="sentDocumentsFolder" value="${x-tee.sentDocumentsFolder}" />
+    <property name="receivedDocumentsFolder" value="${x-tee.receivedDocumentsFolder}" />
+    <!-- Optional properties - END -->
+  </bean>
+
+<!-- /XTee conf -->
+
+</beans>
